@@ -4,13 +4,17 @@ import java.util.Scanner;
 
 public class Game {
 	
+	public int mode;
 	private String word;
 	private boolean isOver = false;
 	private Scanner input;
+	//private LetterChecking LChecker;
 
 	public void setWord(String word) {
 		this.word = word;
 		input = new Scanner(System.in);
+		//lChecker = new LetterChecking();
+		//LChecker.feedWord(word);
 	}
 	
 	public void printStatus() {
@@ -31,10 +35,15 @@ public class Game {
 	}
 	
 	public void update(String input) {
+		
 		isOver = true;
 	}
 	
 	public boolean isOver() {
 		return isOver;
+	}
+	
+	public void setMode(int mode){
+		this.mode = mode;
 	}
 }
