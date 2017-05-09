@@ -2,6 +2,7 @@ package salamander;
 
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.Scanner;
 
 public class Main {
 	
@@ -11,6 +12,9 @@ public class Main {
 	
 	
 	public Main() {
+		
+		
+		
 		words = new FilLeser().getordliste("ordliste.txt");
 		game = new Game();
 		menu = new Menu();
