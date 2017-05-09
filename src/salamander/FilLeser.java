@@ -9,12 +9,13 @@ import java.util.ArrayList;
 public class FilLeser {
 	
 	
-	File fil = new File("ordliste.txt");
+
 	ArrayList<String> ordliste;
 	
 	
-	public ArrayList<String> getOrdFraFil(){
+	public ArrayList<String> getOrdFraFil(String navn){
 		ArrayList<String> ord = new ArrayList<String>();
+		File fil = new File(navn);
 		try{
 		BufferedReader reader = new BufferedReader(new FileReader(fil));
 		String line;
@@ -30,9 +31,9 @@ public class FilLeser {
 		return ord;
 	}
 	
-	public ArrayList<String> getordliste(){
+	public ArrayList<String> getordliste(String navn){
 		if(ordliste == null){
-			ordliste= getOrdFraFil();
+			ordliste= getOrdFraFil(navn);
 		}
 		return ordliste;
 	}

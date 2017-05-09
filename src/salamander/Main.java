@@ -1,13 +1,15 @@
 package salamander;
 
+import java.util.ArrayList;
+
 public class Main {
 	
-	public String[] words;
+	public ArrayList<String> words;
 	public Game game;
 	
 	
 	public Main() {
-		//words = new WordFetcher().readWords("wordList.txt");
+		words = new FilLeser().getordliste("ordliste.txt");
 		game = new Game();
 		play();
 	}
