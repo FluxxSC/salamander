@@ -10,12 +10,14 @@ import java.util.ArrayList;
 
 public class Server implements Runnable {
 	
+	private Thread t;
 	private int port;
 	private boolean running = true;
 	private ArrayList<Listener> listeners;
 	
 	public Server(int port) {
 		this.port = port;
+		listeners = new ArrayList<Listener>();
 	}
 	
 	public void run() {
@@ -24,8 +26,10 @@ public class Server implements Runnable {
 	
 	private void setup() {
 		try {
+			System.out.println("Setting up server...");
 			ServerSocket serverSocket = new ServerSocket(port);
 			while (running) {
+				System.out.println("Server listening at port " + port);
 				Socket connectionSocket = serverSocket.accept();
 				Listener listener = new Listener(connectionSocket);
 				listeners.add(listener);
@@ -34,6 +38,19 @@ public class Server implements Runnable {
 			
 		} catch (IOException e) {
 			System.out.println("Error setting up server: " + e);
+		}
+	}
+	
+	public void send(String command) {
+		for (Listener listener : listeners) {
+			listener.send(command);
+		}
+	}
+	
+	public void start() {
+		if (t == null) {
+			t = new Thread(this, "serverThread");
+			t.start();
 		}
 	}
 	
@@ -47,6 +64,7 @@ public class Server implements Runnable {
 
 class Listener implements Runnable {
 	
+	private Thread t;
 	private boolean running;
 	private Socket clientSocket;
 	private DataOutputStream outToClient;
@@ -56,6 +74,7 @@ class Listener implements Runnable {
 		this.clientSocket = clientSocket;
 		run();
 	}
+	
 	
 	public void run() {
 		try {
@@ -69,7 +88,21 @@ class Listener implements Runnable {
 		} catch (IOException e) {
 			System.out.println("Listening error: " + e);
 		}
-		
+	}
+	
+	public void send(String command) {
+		try {
+			System.out.println("Sending to client: " + command);
+			outToClient.writeBytes(command + "\n");
+		} catch (IOException e) {
+			System.out.println("Server sending error: " + e);
+		}
+	}
+	
+	public void start() {
+		if (t == null) {
+			t = new Thread(this, "listenerThread");
+		}
 	}
 	
 	public void stop() {

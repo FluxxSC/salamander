@@ -8,6 +8,7 @@ import java.net.Socket;
 
 public class Client implements Runnable{
 	
+	private Thread t;
 	private String address;
 	private int port;
 	private boolean running = true;
@@ -20,12 +21,15 @@ public class Client implements Runnable{
 	}
 	
 	public void run() {
+		System.out.println("setting up client");
 		connect();
 	}
 	
 	private void connect() {
 		try {
+			System.out.println("Connecting to server...");
 			Socket clientSocket = new Socket(address, port);
+			System.out.println("Connected to server!");
 			outToServer = new DataOutputStream(clientSocket.getOutputStream());
 			BufferedReader inFromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 			
@@ -48,6 +52,13 @@ public class Client implements Runnable{
 			System.out.println("Client sending error: " + e);
 		}
 		
+	}
+	
+	public void start() {
+		if (t == null) {
+			t = new Thread(this, "clientThread");
+			t.start();
+		}
 	}
 	
 	public void stop() {

@@ -1,6 +1,7 @@
 package salamander;
 
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class Main {
 	
@@ -9,9 +10,26 @@ public class Main {
 	
 	
 	public Main() {
+		
+		Server server = new Server(6789);
+		Client client = new Client("localhost", 6789);
+		
+		server.start();
+		client.start();
+		
+		Scanner input = new Scanner(System.in);
+		
+		int a = 0;
+		while (a < 10) {
+			client.send(input.nextLine());
+			a += 1;
+		}
+		
+		
+		
 		words = new FilLeser().getordliste("ordliste.txt");
 		game = new Game();
-		play();
+		//play();
 	}
 	
 	public void play() {
