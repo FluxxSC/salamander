@@ -8,6 +8,7 @@ public class Game {
 	private String word;
 	private boolean isOver = false;
 	private Scanner input;
+	public HangmanDrawer hDrawer;
 	//private LetterChecking LChecker;
 
 	public void setWord(String word) {
@@ -15,10 +16,11 @@ public class Game {
 		input = new Scanner(System.in);
 		//lChecker = new LetterChecking();
 		//LChecker.feedWord(word);
+		hDrawer = new HangmanDrawer();
 	}
 	
 	public void printStatus() {
-		System.out.println("_________");
+		hDrawer.drawHangman(6);
 	}
 	
 	public void printEnd() {
