@@ -12,10 +12,11 @@ public class Client implements Runnable{
 	private String address;
 	private int port;
 	private boolean running = true;
+	private Main main;
 	
 	private DataOutputStream outToServer;
 	
-	public Client(String address, int port) {
+	public Client(String address, int port, Main main) {
 		this.address = address;
 		this.port = port;
 	}
