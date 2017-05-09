@@ -13,6 +13,16 @@ public class Main {
 	
 	public Main() {
 		
+		Server server = new Server(6789);
+		Client client1 = new Client("localhost", 6789, this);
+		Client client2 = new Client("localhost", 6789, this);
+		
+		server.start();
+		client1.start();
+		client2.start();
+		
+		client1.send(new Scanner(System.in).nextLine());
+		
 		
 		
 		words = new FilLeser().getordliste("ordliste.txt");
