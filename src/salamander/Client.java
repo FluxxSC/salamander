@@ -22,7 +22,7 @@ public class Client implements Runnable{
 	}
 	
 	public void run() {
-		System.out.println("setting up client");
+		//System.out.println("setting up client");
 		connect();
 	}
 	

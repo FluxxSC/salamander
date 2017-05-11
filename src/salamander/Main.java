@@ -13,7 +13,7 @@ public class Main {
 	
 	public Main() {
 		
-		Server server = new Server(6789);
+		Server server = new Server(6789, this);
 		Client client1 = new Client("localhost", 6789, this);
 		Client client2 = new Client("localhost", 6789, this);
 		
@@ -21,7 +21,7 @@ public class Main {
 		client1.start();
 		client2.start();
 		
-		client1.send(new Scanner(System.in).nextLine());
+		//client1.send(new Scanner(System.in).nextLine());
 		
 		
 		
@@ -52,6 +52,10 @@ public class Main {
 	private String randomWord() {
 		words.get(new Random().nextInt(words.size()-1));
 		return "word";
+	}
+	
+	public void serverUp(String ip, int port) {
+		System.out.println("Server lytter på " + ip + " : " + port + ".");
 	}
 	
 	

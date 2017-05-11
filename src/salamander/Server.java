@@ -4,19 +4,25 @@ import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.MalformedURLException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.URL;
 import java.util.ArrayList;
+
+import com.sun.org.apache.xerces.internal.util.URI.MalformedURIException;
 
 public class Server implements Runnable {
 
+	private Main main;
 	private Thread t;
 	private int port;
 	private boolean running = true;
 	private ArrayList<Listener> listeners;
 
-	public Server(int port) {
+	public Server(int port, Main main) {
 		this.port = port;
+		this.main = main;
 		listeners = new ArrayList<Listener>();
 	}
 
@@ -25,11 +31,13 @@ public class Server implements Runnable {
 	}
 
 	private void setup() {
+		String myIp = getIp();
 		try {
 			System.out.println("Setting up server...");
 			ServerSocket serverSocket = new ServerSocket(port);
+			main.serverUp(myIp, port);
 			while (running) {
-				System.out.println("Server listening at port " + port);
+				//System.out.println("Server listening at port " + port);
 				Socket connectionSocket = serverSocket.accept();
 				Listener listener = new Listener(connectionSocket, this);
 				listener.start();
@@ -61,6 +69,21 @@ public class Server implements Runnable {
 			listener.stop();
 		}
 	}
+	
+	private String getIp() {
+		try {
+			URL checkIp = new URL("http://checkip.amazonaws.com");
+			BufferedReader in = new BufferedReader(new InputStreamReader(checkIp.openStream()));
+			String ip = in.readLine();
+			return ip.toString();
+		} catch (MalformedURLException e) {
+			System.out.println("URL error: " + e);
+		} catch (IOException e) {
+			System.out.println("Open stream exception: " + e);
+		}
+		return null;
+		
+	}
 }
 
 class Listener implements Runnable {
@@ -77,7 +100,7 @@ class Listener implements Runnable {
 	}
 
 	public void run() {
-		System.out.println("Starting listener...");
+		//System.out.println("Starting listener...");
 		listen();
 	}
 
