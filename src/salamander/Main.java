@@ -1,5 +1,8 @@
 package salamander;
 
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
@@ -22,8 +25,6 @@ public class Main {
 		client2.start();
 		
 		//client1.send(new Scanner(System.in).nextLine());
-		
-		
 		
 		words = new FilLeser().getordliste("ordliste.txt");
 		game = new Game();
@@ -54,9 +55,18 @@ public class Main {
 		return "word";
 	}
 	
+	private void copyToClipBoard(String text) {
+		StringSelection selection = new StringSelection(text);
+		Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+		clipboard.setContents(selection, selection);
+	}
+	
 	public void serverUp(String ip, int port) {
 		System.out.println("Server lytter på " + ip + " : " + port + ".");
+		//System.out.println("Ip kopiert til utklippstavlen.");
+		//copyToClipBoard(""+ip);
 	}
+	
 	
 	
 	

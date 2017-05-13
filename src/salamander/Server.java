@@ -9,6 +9,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Hashtable;
 
 import com.sun.org.apache.xerces.internal.util.URI.MalformedURIException;
 
@@ -18,12 +19,13 @@ public class Server implements Runnable {
 	private Thread t;
 	private int port;
 	private boolean running = true;
-	private ArrayList<Listener> listeners;
+	private Hashtable<Integer, Listener> listeners;
+	private int listenerId = 0;
 
 	public Server(int port, Main main) {
 		this.port = port;
 		this.main = main;
-		listeners = new ArrayList<Listener>();
+		listeners = new Hashtable<Integer, Listener>();
 	}
 
 	public void run() {
@@ -33,15 +35,18 @@ public class Server implements Runnable {
 	private void setup() {
 		String myIp = getIp();
 		try {
-			System.out.println("Setting up server...");
+			//System.out.println("Setting up server...");
 			ServerSocket serverSocket = new ServerSocket(port);
 			main.serverUp(myIp, port);
 			while (running) {
 				//System.out.println("Server listening at port " + port);
 				Socket connectionSocket = serverSocket.accept();
+				
 				Listener listener = new Listener(connectionSocket, this);
 				listener.start();
-				listeners.add(listener);
+				listeners.put(listenerId, listener);
+				listener.send(Commands.ID.make(listenerId));
+				listenerId++;
 			}
 			serverSocket.close();
 
@@ -51,8 +56,8 @@ public class Server implements Runnable {
 	}
 
 	public void send(String command) {
-		for (Listener listener : listeners) {
-			listener.send(command);
+		for (int i : listeners.keySet()) {
+			listeners.get(i).send(command);
 		}
 	}
 
@@ -65,8 +70,8 @@ public class Server implements Runnable {
 
 	public void stop() {
 		running = false;
-		for (Listener listener : listeners) {
-			listener.stop();
+		for (int i : listeners.keySet()) {
+			listeners.get(i).stop();
 		}
 	}
 	
@@ -109,7 +114,7 @@ class Listener implements Runnable {
 			BufferedReader inFromClient = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 			outToClient = new DataOutputStream(clientSocket.getOutputStream());
 			while (running) {
-				System.out.println("Listening to client: " + clientSocket);
+				//System.out.println("Listening to client: " + clientSocket);
 				String input = inFromClient.readLine();
 				System.out.println("Received from client: " + input);
 				server.send(input);
@@ -121,10 +126,13 @@ class Listener implements Runnable {
 		}
 	}
 
-	public void send(String command) {
+	public void send(String message) {
 		try {
-			System.out.println("Sending to client: " + command);
-			outToClient.writeBytes(command + "\n");
+			while (outToClient == null) {
+				//System.out.println(".");
+			}
+			//System.out.println("Sending to client: " + command);
+			outToClient.writeBytes(message + "\n");
 		} catch (IOException e) {
 			System.out.println("Server sending error: " + e);
 		}

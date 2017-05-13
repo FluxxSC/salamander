@@ -36,7 +36,8 @@ public class Client implements Runnable{
 			
 			while (running) {
 				String input = inFromServer.readLine();
-				System.out.println("Received from server: " + input);
+				//System.out.println("Received from server: " + input);
+				handleMessage(input);
 			}
 			clientSocket.close();
 			
@@ -45,10 +46,34 @@ public class Client implements Runnable{
 		}
 	}
 	
-	public void send(String command) {
+	private void handleMessage(String message) {
+		String[] parts = message.split("\\|");
+		Commands command = Commands.is(Integer.parseInt(parts[0]));
+		int id = Integer.parseInt(parts[1]);
+		String arg = "";
+		if (parts.length > 2) arg = parts[2];
+		
+		switch (command) {
+		case ID:
+			System.out.println("My new id is: " + id);
+			break;
+		case NAME:
+			break;
+		case LETTER:
+			break;
+		case CHAT:
+			break;
+		case UNKNOWN:
+			System.out.println("Unknown command received: " + message);
+			break;
+			
+		}
+	}
+	
+	public void send(String message) {
 		try {
-			System.out.println("Sending to server: " + command);
-			outToServer.writeBytes(command + "\n");
+			System.out.println("Sending to server: " + message);
+			outToServer.writeBytes(message + "\n");
 		} catch (IOException e) {
 			System.out.println("Client sending error: " + e);
 		}
@@ -65,5 +90,4 @@ public class Client implements Runnable{
 	public void stop() {
 		running = false;
 	}
-
 }
