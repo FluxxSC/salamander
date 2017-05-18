@@ -2,14 +2,14 @@ package salamander;
 
 public class LetterChecking {
 
-	// Lager en liste med alle bokstaver. 
-	
+	// Lager en liste med alle bokstaver.
+
 	private String[] allLetters = { "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q",
 			"r", "s", "t", "u", "v", "w", "x", "y", "z", "æ", "ø", "å" };
 	private String[] remainingLetters = allLetters;
 
-	// Ubrukt variabel som evt kan lage en liste med de gjettede bokstavene. 
-	
+	// Ubrukt variabel som evt kan lage en liste med de gjettede bokstavene.
+
 	private String[] guesedLetters;
 
 	// Variabler som blir brukt i metoden feedWord.
@@ -24,6 +24,7 @@ public class LetterChecking {
 
 	private String currentLetter;
 	private String[] correctRemainingLetters;
+	
 
 	// Variabler som blir brukt i metoden campareLetters.
 
@@ -41,10 +42,11 @@ public class LetterChecking {
 		correctLetterPlacements = new int[correctLetters.length];
 		wordProgress = new String[correctLetters.length];
 
-		for (int i = 0; i == correctLetters.length; i++) {
+		for (int i = 0; i < correctLetters.length; i++) {
 			wordProgress[i] = "_ ";
 
 		}
+
 	}
 
 	// Den tar inn bokstaven som blir gjettet som currentLetter, lager en ny
@@ -54,12 +56,16 @@ public class LetterChecking {
 
 	public void letterInput(String currentLetter) {
 		this.currentLetter = currentLetter;
+		int j = 0;
 
 		correctRemainingLetters = new String[remainingLetters.length - 1];
 
-		for (int i = 0; i == remainingLetters.length; i++) {
-			if (currentLetter != remainingLetters[i]) {
-				correctRemainingLetters[i] = remainingLetters[i];
+		for (int i = 0; i < remainingLetters.length; i++) {
+			if (!currentLetter.equals(remainingLetters[i])) {
+				correctRemainingLetters[j] = remainingLetters[i];
+				
+				j++;
+				
 			}
 		}
 
@@ -77,8 +83,8 @@ public class LetterChecking {
 	// så ikke alle bokstaver byttes ut hver gang.
 
 	public void compareLetters() {
-		for (int i = 0; i == correctLetters.length; i++) {
-			if (correctLetters[i] == currentLetter) {
+		for (int i = 0; i < correctLetters.length; i++) {
+			if (correctLetters[i].equals(currentLetter)) {
 				correctLetter = true;
 				correctLetterPlacements[i] = 1;
 
@@ -89,7 +95,7 @@ public class LetterChecking {
 		} else {
 			wordProgression();
 
-			for (int i = 0; i == correctLetters.length; i++) {
+			for (int i = 0; i < correctLetters.length; i++) {
 				correctLetterPlacements[i] = 0;
 			}
 
@@ -103,7 +109,7 @@ public class LetterChecking {
 	// der == 1.
 
 	public void wordProgression() {
-		for (int i = 0; i == correctLetters.length; i++) {
+		for (int i = 0; i < correctLetters.length; i++) {
 			if (correctLetter) {
 				if (correctLetterPlacements[i] == 1) {
 					wordProgress[i] = currentLetter;
@@ -112,6 +118,20 @@ public class LetterChecking {
 			}
 		}
 
+	}
+
+	public String getProgress() {
+		String stringOut = "";
+
+		for (int i = 0; i < correctLetters.length; i++) {
+			stringOut += wordProgress[i];
+		}
+
+		return stringOut;
+	}
+
+	public String[] getRemainingLetters() {
+		return remainingLetters;
 	}
 
 }

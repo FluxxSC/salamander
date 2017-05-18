@@ -9,18 +9,19 @@ public class Game {
 	private boolean isOver = false;
 	private Scanner input;
 	public HangmanDrawer hDrawer;
-	//private LetterChecking LChecker;
+	private LetterChecking lChecker;
 
 	public void setWord(String word) {
 		this.word = word;
 		input = new Scanner(System.in);
-		//lChecker = new LetterChecking();
-		//LChecker.feedWord(word);
+		lChecker = new LetterChecking();
+		lChecker.feedWord(word);
 		hDrawer = new HangmanDrawer();
 	}
 	
 	public void printStatus() {
 		hDrawer.drawHangman(6);
+		System.out.println(lChecker.getProgress());
 	}
 	
 	public void printEnd() {
@@ -38,7 +39,8 @@ public class Game {
 	
 	public void update(String input) {
 		
-		isOver = true;
+		lChecker.letterInput(input);
+		lChecker.compareLetters();
 	}
 	
 	public boolean isOver() {
